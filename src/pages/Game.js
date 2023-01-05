@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { Col, Row } from 'react-bootstrap';
+import { Col, Modal, Row } from 'react-bootstrap';
+import { WinnerModal } from '../components/modals/WinnerModal';
 import './Game.css'
 
 export const Game = () => {
     const [selectedCells, setSelectedCells] = useState(new Map());
     const [playerOne, setPlayerOne] = useState(true)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     const checkCellValue = (indexRow, indexCol) => {
         const rowCell = ""+indexRow+indexCol;
@@ -15,29 +17,67 @@ export const Game = () => {
     }
 
     const onClickCell = (indexRow, indexCol) => {
-        const rowCell = ""+indexRow+indexCol;
+        const rowCell = "" + indexRow + indexCol;
         if (selectedCells.has(rowCell)) {
             return
         }
         setSelectedCells(selectedCells.set(rowCell,playerOne))
-        console.log(selectedCells.get(indexRow - 1 + "" + indexCol))
 
-        let winCounter = 1;
+        if (selectedCells.get(indexRow - 1 + "" + indexCol) == playerOne &&
+            selectedCells.get(indexRow + 1 + "" + indexCol) == playerOne) {
+            //check one up and one down
+            setIsModalOpen(true)
+            return
+            
+        } else if (selectedCells.get(indexRow + "" + parseInt(indexCol - 1)) == playerOne &&
+                   selectedCells.get(indexRow + "" + parseInt(indexCol - 2)) == playerOne) {
+            //check one up and one down
+            setIsModalOpen(true)
+            return
+        
+        } else if (selectedCells.get(indexRow + "" + parseInt(indexCol + 1)) == playerOne &&
+                   selectedCells.get(indexRow + "" + parseInt(indexCol + 2)) == playerOne) {
+            //check one up and one down
+            setIsModalOpen(true)
+            return
 
-        if (selectedCells.get(indexRow - 1 + "" + indexCol) == playerOne) {
-            winCounter++;
-            if (selectedCells.get(indexRow - 2 + "" + indexCol) == playerOne) {
-                winCounter++;
-                alert(playerOne ? "X nyert" : "O nyert")
-            }
-        }
-
+        } else if (selectedCells.get(indexRow - 1 + "" + indexCol) == playerOne && 
+                   selectedCells.get(indexRow - 2 + "" + indexCol) == playerOne){
+            //checking 2 cells upper
+            setIsModalOpen(true)
+            return
+        } else if (selectedCells.get(indexRow + 1 + "" + indexCol) == playerOne && 
+                   selectedCells.get(indexRow + 2 + "" + indexCol) == playerOne){
+            //checking 2 cells down
+            setIsModalOpen(true)
+            return
+        } else if (selectedCells.get(indexRow - 1 + "" + parseInt(indexCol - 1)) == playerOne &&
+                   selectedCells.get(indexRow + 1 + "" + parseInt(indexCol + 1)) == playerOne) {
+            setIsModalOpen(true)
+            return
+        }else if (selectedCells.get(indexRow + 1 + "" + parseInt(indexCol - 1)) == playerOne &&
+                  selectedCells.get(indexRow + 2 + "" + parseInt(indexCol - 2)) == playerOne) {
+            setIsModalOpen(true)
+            return
+        }else if (selectedCells.get(indexRow - 1 + "" + parseInt(indexCol + 1)) == playerOne &&
+                  selectedCells.get(indexRow - 2 + "" + parseInt(indexCol + 2)) == playerOne) {
+            setIsModalOpen(true)
+            return
+        }else if (selectedCells.get(indexRow - 1 + "" + parseInt(indexCol - 1)) == playerOne &&
+                  selectedCells.get(indexRow - 2 + "" + parseInt(indexCol - 2)) == playerOne) {
+            setIsModalOpen(true)
+            return
+        }else if (selectedCells.get(indexRow + 1 + "" + parseInt(indexCol + 1)) == playerOne &&
+                  selectedCells.get(indexRow + 2 + "" + parseInt(indexCol + 2)) == playerOne) {
+            setIsModalOpen(true)
+            return
+        }        
         setPlayerOne(!playerOne);
-        console.log(selectedCells)
     }
 
     return (
     <>
+        <WinnerModal show={isModalOpen} onHide={() => setIsModalOpen(false)} winner={playerOne} />
         {
             Array.from({length: 3}, (_, indexRow) => {
                 return <Row key={indexRow}>
